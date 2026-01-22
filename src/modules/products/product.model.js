@@ -1,41 +1,7 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
 
-const variantSchema = new mongoose.Schema(
-  {
-    attributes: {
-      type: Map,
-      of: mongoose.Schema.Types.Mixed, 
-      required: true
-    },
-
-    price: {
-      type: Number,
-      required: true,
-      min: 0
-    },
-
-    stock: {
-      type: Number,
-      required: true,
-      min: 0
-    },
-
-    sku: {
-      type: String,
-      unique: true
-    },
-
-    isDefault: {
-      type: Boolean,
-      default: false
-    }
-  },
-  { _id: true }
-);
-
-
-const productSchema = mongoose.Schema({
+const ProductSchema = mongoose.Schema({
   subcategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "subcategory",
@@ -46,61 +12,111 @@ const productSchema = mongoose.Schema({
     required: true,
     maxLength: 200,
   },
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    index: true,
-  },
-  images: [
-    {
-      url: String,
-      alt: String,
-    },
-  ],
+  slug: { type: String, required: true, unique: true, index: true },
   brand: {
     type: String,
     required: true,
-    trim: true,
   },
   price: {
     type: Number,
     min: 0,
     required: true,
   },
-  discountPrice: {
-    type: Number,
-    validate: {
-      validator(value) {
-        return value < this.price;
-      },
-      message: "Discount price must be less than regular price",
-    },
-  },
   overview: {
     type: String,
     required: true,
     minLength: 100,
-    maxlength: 2000,
+    maxLength: 2000,
   },
-  specs: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {},
+  specs: [
+    {
+      name: String,
+      values: [String],
+    },
+  ],
+
+  images: [
+    {
+      url: {
+        type: String,
+        required: true,
+      },
+      isPrimary: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
+
+  sku: {
+    type: String,
+    sparse: true,
+    unique: true,
+    index: true,
+    lowercase: true,
   },
-  
-  variants: [variantSchema],
 
   stock: {
     type: Number,
     required: true,
     min: 0,
-  },
-  sold: {
-    type: Number,
-    min: 0,
     default: 0,
   },
+
+  hasVariants: {
+    type: Boolean,
+    default: false,
+  },
+
+  variantOptions: [
+    {
+      name: String,
+      values: [String],
+    },
+  ],
+
+  variants: [
+    {
+      sku: {
+        type: String,
+        required: true,
+      },
+      options: [
+        {
+          name: String,
+          value: String,
+        },
+      ],
+      price: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      stock: {
+        type: Number,
+        required: true,
+        min: 0,
+        default: 0,
+      },
+      images: [
+        {
+          url: {
+            type: String,
+            required: true,
+          },
+          isPrimary: {
+            type: Boolean,
+            default: false,
+          },
+        },
+      ],
+      isAvailable: {
+        type: Boolean,
+        default: true,
+      },
+    },
+  ],
+
   ratingAvg: {
     type: Number,
     default: 0,
@@ -117,14 +133,11 @@ const productSchema = mongoose.Schema({
   isFeatured: Boolean,
 });
 
-productSchema.pre("validate", function () {
+//auto generate slug
+ProductSchema.pre("validate", function () {
   if (this.isModified("name") || this.isNew) {
     this.slug = slugify(this.name, { lower: true });
   }
 });
 
-productSchema.virtual("finalPrice").get(function () {
-  return this.discountPrice ?? this.price;
-});
-
-export const Products = mongoose.model("products", productSchema);
+export const Products = mongoose.model("products", ProductSchema);

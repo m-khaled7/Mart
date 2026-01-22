@@ -43,44 +43,6 @@ const subcategorySchema = mongoose.Schema({
     lowercase: true,
     index: true,
   },
-  specSchema: [
-    //products specs schema per category [for standring and validation]
-    {
-      key: {
-        type: String,
-        required: true,
-      },
-
-      label: {
-        type: String,
-        required: true,
-      },
-
-      type: {
-        type: String,
-        enum: ["string", "number", "boolean", "enum"],
-        required: true,
-      },
-
-      required: {
-        type: Boolean,
-        default: false,
-      },
-
-      filterable: {
-        type: Boolean,
-        default: false,
-      },
-      isVariant: {
-        type: Boolean,
-        default: false,
-      },
-
-      enumValues: [String],
-
-      unit: String,
-    },
-  ],
 });
 
 subcategorySchema.pre("validate", function () {
