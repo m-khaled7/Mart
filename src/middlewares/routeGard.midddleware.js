@@ -1,6 +1,6 @@
 import AsyncHandler from "./Async.middleware.js"
 import AppError from "../utils/ApiError.js"
-import User from "../modules/user/user.model.js";
+import User from "../modules/User/user.model.js";
 import { verifyAccessToken } from "../utils/JWT.js";
 
 export default AsyncHandler(async (req, res, next) => {
