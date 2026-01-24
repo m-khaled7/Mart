@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import env from "../config/env.js"
+import env from "../../config/env.js"
 
 export const signAccessToken=(id)=>jwt.sign({sub:id}, env.JWT_secret)
 export const verifyAccessToken=(token)=>jwt.verify(token, env.JWT_secret);

@@ -6,7 +6,7 @@ import Hash from "../../utils/Hash.js";
 import transporter from "../../config/email.js";
 import verificationEmail from "../../templates/verificationEmail.js";
 
-//send email verificatoin code
+//send email verification code
 export const sendCodeService = async (userId) => {
   const user = await User.findById(userId);
   if (!user) throw new AppError("User not found", 404);

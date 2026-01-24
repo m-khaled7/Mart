@@ -4,7 +4,7 @@ import { registerSchema,loginSchema } from "./validations.Schema.js"
 import { loginService, registerService, sendCodeService, verifyEmailService } from "./Auth.service.js"
 import ApiResponse from "../../utils/ApiResponse.js"
 import AppError from "../../utils/AppError.js"
-import { signVerifyToken,signAccessToken } from "../../utils/JWT.js"
+import { signVerifyToken,signAccessToken } from "./JWT.js"
 
 //register
 export const register = AsyncHandler(async (req, res) => {

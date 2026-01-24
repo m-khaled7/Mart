@@ -1,7 +1,7 @@
 import AsyncHandler from "../utils/AsyncHandler.js"
 import AppError from "../utils/AppError.js"
 import User from "../modules/User/user.model.js";
-import { verfiyVerifyToken } from "../utils/JWT.js";
+import { verfiyVerifyToken } from "../modules/Auth/JWT.js";
 
 export default AsyncHandler(async (req, res, next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization;
